@@ -61,10 +61,25 @@ public class BookKeeperTest {
     public void testIfInvoiceIsEmpty() {
         assertEquals(0, this.bookKeeper.issuance(this.invoiceRequest, this.taxPolicy).getItems().size());
     }
-    
+
     @Test(expected = NullPointerException.class)
     public void testIfInvoiceThrowNull() {
         this.bookKeeper.issuance(null, this.taxPolicy);
     }
+
+    @Test
+    public void testIfInvoiceHandleMultipleElements() {
+        this.invoiceRequest.add(this.requestItem);
+        this.invoiceRequest.add(this.requestItem);
+        this.invoiceRequest.add(this.requestItem);
+        this.invoiceRequest.add(this.requestItem);
+        this.invoiceRequest.add(this.requestItem);
+        this.invoiceRequest.add(this.requestItem);
+        this.invoiceRequest.add(this.requestItem);
+        this.invoiceRequest.add(this.requestItem);
+
+        assertEquals(8, this.bookKeeper.issuance(this.invoiceRequest, this.taxPolicy).getItems().size());
+    }
+    
 
 }
