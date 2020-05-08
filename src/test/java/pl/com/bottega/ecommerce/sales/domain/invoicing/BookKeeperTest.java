@@ -45,7 +45,7 @@ public class BookKeeperTest {
     @Test
     public void testIfOneInvoice() {
         this.invoiceRequest.add(this.requestItem);
-        assertEquals(1, bookKeeper.issuance(invoiceRequest, taxPolicy).getItems().size());
+        assertEquals(1, this.bookKeeper.issuance(this.invoiceRequest, this.taxPolicy).getItems().size());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class BookKeeperTest {
         this.invoiceRequest.add(this.requestItem);
         this.invoiceRequest.add(this.requestItem);
 
-        bookKeeper.issuance(this.invoiceRequest, this.taxPolicy);
+        this.bookKeeper.issuance(this.invoiceRequest, this.taxPolicy);
         Mockito.verify(this.taxPolicy, Mockito.times(2)).calculateTax(Mockito.any(), Mockito.any());
     }
 }
