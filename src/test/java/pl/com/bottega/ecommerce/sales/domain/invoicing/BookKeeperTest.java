@@ -80,6 +80,11 @@ public class BookKeeperTest {
 
         assertEquals(8, this.bookKeeper.issuance(this.invoiceRequest, this.taxPolicy).getItems().size());
     }
-    
+
+    @Test
+    public void testIfEmptyInvoiceDoesntCallCalculateTax() {
+        this.bookKeeper.issuance(this.invoiceRequest, this.taxPolicy);
+        Mockito.verify(this.taxPolicy, Mockito.times(0)).calculateTax(Mockito.any(), Mockito.any());
+    }
 
 }
