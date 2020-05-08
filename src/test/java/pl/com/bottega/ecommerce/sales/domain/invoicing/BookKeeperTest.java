@@ -48,4 +48,12 @@ public class BookKeeperTest {
         assertEquals(1, bookKeeper.issuance(invoiceRequest, taxPolicy).getItems().size());
     }
 
+    @Test
+    public void testIfCalculateTaxInvokedTwice() {
+        this.invoiceRequest.add(this.requestItem);
+        this.invoiceRequest.add(this.requestItem);
+
+        bookKeeper.issuance(this.invoiceRequest, this.taxPolicy);
+        Mockito.verify(this.taxPolicy, Mockito.times(2)).calculateTax(Mockito.any(), Mockito.any());
+    }
 }
