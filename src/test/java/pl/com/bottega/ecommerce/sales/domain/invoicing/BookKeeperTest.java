@@ -49,14 +49,22 @@ public class BookKeeperTest {
 
     @Test
     public void testIfOneInvoice() {
-        this.invoiceRequest.add(this.requestItem);
+        this.invoiceRequest = new InvoiceRequestBuilder()
+                .withClient(this.client)
+                .withSampleRequest(this.requestItem)
+                .withItems(1)
+                .build();
+
         assertEquals(1, this.bookKeeper.issuance(this.invoiceRequest, this.taxPolicy).getItems().size());
     }
 
     @Test
     public void testIfCalculateTaxInvokedTwice() {
-        this.invoiceRequest.add(this.requestItem);
-        this.invoiceRequest.add(this.requestItem);
+        this.invoiceRequest = new InvoiceRequestBuilder()
+                .withClient(this.client)
+                .withSampleRequest(this.requestItem)
+                .withItems(2)
+                .build();
 
         this.bookKeeper.issuance(this.invoiceRequest, this.taxPolicy);
         Mockito.verify(this.taxPolicy, Mockito.times(2)).calculateTax(Mockito.any(), Mockito.any());
@@ -64,6 +72,10 @@ public class BookKeeperTest {
 
     @Test
     public void testIfInvoiceIsEmpty() {
+        this.invoiceRequest = new InvoiceRequestBuilder()
+                .withClient(this.client)
+                .build();
+
         assertEquals(0, this.bookKeeper.issuance(this.invoiceRequest, this.taxPolicy).getItems().size());
     }
 
@@ -74,20 +86,21 @@ public class BookKeeperTest {
 
     @Test
     public void testIfInvoiceHandleMultipleElements() {
-        this.invoiceRequest.add(this.requestItem);
-        this.invoiceRequest.add(this.requestItem);
-        this.invoiceRequest.add(this.requestItem);
-        this.invoiceRequest.add(this.requestItem);
-        this.invoiceRequest.add(this.requestItem);
-        this.invoiceRequest.add(this.requestItem);
-        this.invoiceRequest.add(this.requestItem);
-        this.invoiceRequest.add(this.requestItem);
+        this.invoiceRequest = new InvoiceRequestBuilder()
+                .withClient(this.client)
+                .withSampleRequest(this.requestItem)
+                .withItems(8)
+                .build();
 
         assertEquals(8, this.bookKeeper.issuance(this.invoiceRequest, this.taxPolicy).getItems().size());
     }
 
     @Test
     public void testIfEmptyInvoiceDoesntCallCalculateTax() {
+        this.invoiceRequest = new InvoiceRequestBuilder()
+                .withClient(this.client)
+                .build();
+
         this.bookKeeper.issuance(this.invoiceRequest, this.taxPolicy);
         Mockito.verify(this.taxPolicy, Mockito.times(0)).calculateTax(Mockito.any(), Mockito.any());
     }
