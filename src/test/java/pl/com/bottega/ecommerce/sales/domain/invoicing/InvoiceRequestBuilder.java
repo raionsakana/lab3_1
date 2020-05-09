@@ -1,11 +1,6 @@
 package pl.com.bottega.ecommerce.sales.domain.invoicing;
 
 import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.ClientData;
-import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductData;
-import pl.com.bottega.ecommerce.sharedkernel.Money;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InvoiceRequestBuilder {
 
