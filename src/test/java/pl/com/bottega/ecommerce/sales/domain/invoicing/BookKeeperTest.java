@@ -7,8 +7,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.ClientData;
-import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.Id;
-import pl.com.bottega.ecommerce.sales.domain.productscatalog.Product;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductData;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductType;
 import pl.com.bottega.ecommerce.sharedkernel.Money;
@@ -18,7 +16,6 @@ import static org.junit.Assert.*;
 @RunWith(MockitoJUnitRunner.class)
 public class BookKeeperTest {
 
-    @Mock private Id id;
     @Mock private Money money;
 
     @Mock private ClientData client;
@@ -40,11 +37,11 @@ public class BookKeeperTest {
                 .withType(ProductType.STANDARD)
                 .build();
 
-        this.requestItem = new RequestItem(
-                productData
-                , 0
-                , Money.ZERO
-        );
+        this.requestItem = new RequestItemBuilder()
+                .withProductData(this.productData)
+                .withQuantity(0)
+                .withMoney(Money.ZERO)
+                .build();
 
         Mockito.when(taxPolicy.calculateTax(ProductType.STANDARD, Money.ZERO))
                 .thenReturn(new Tax(Money.ZERO, ""));
