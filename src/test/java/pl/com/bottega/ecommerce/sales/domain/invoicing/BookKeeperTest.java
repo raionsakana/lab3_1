@@ -3,10 +3,9 @@ package pl.com.bottega.ecommerce.sales.domain.invoicing;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.ClientData;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductData;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductType;
 import pl.com.bottega.ecommerce.sharedkernel.Money;
@@ -16,9 +15,7 @@ import static org.junit.Assert.*;
 @RunWith(MockitoJUnitRunner.class)
 public class BookKeeperTest {
 
-    @Mock private ClientData client;
-    @Mock private TaxPolicy taxPolicy;
-
+    private TaxPolicy taxPolicy;
     private ProductData productData;
     private RequestItem requestItem;
     private InvoiceRequest invoiceRequest;
@@ -27,7 +24,6 @@ public class BookKeeperTest {
     @Before
     public void setUp() throws Exception {
         this.bookKeeper = new BookKeeper(new InvoiceFactory());
-        this.invoiceRequest = new InvoiceRequest(this.client);
 
         this.productData = new ProductDataBuilder()
                 .withMoney(Money.ZERO)
@@ -40,6 +36,8 @@ public class BookKeeperTest {
                 .withQuantity(0)
                 .withMoney(Money.ZERO)
                 .build();
+
+        this.taxPolicy = mock(TaxPolicy.class);
 
         Mockito.when(taxPolicy.calculateTax(ProductType.STANDARD, Money.ZERO))
                 .thenReturn(new Tax(Money.ZERO, ""));
@@ -93,6 +91,17 @@ public class BookKeeperTest {
         this.invoiceRequest = new InvoiceRequestBuilder().build();
         this.bookKeeper.issuance(this.invoiceRequest, this.taxPolicy);
         Mockito.verify(this.taxPolicy, Mockito.times(0)).calculateTax(Mockito.any(), Mockito.any());
+    }
+
+    @Test
+    public void testIfCalculateTaxHasCorrectParams() {
+        this.invoiceRequest = new InvoiceRequestBuilder()
+                .withSampleRequest(this.requestItem)
+                .withItems(1)
+                .build();
+
+        this.bookKeeper.issuance(this.invoiceRequest, this.taxPolicy);
+        Mockito.verify(this.taxPolicy, Mockito.times(1)).calculateTax(ProductType.STANDARD, Money.ZERO);
     }
 
 }
